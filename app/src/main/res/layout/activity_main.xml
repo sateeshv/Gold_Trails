@@ -46,4 +46,10 @@
         android:text="DRAW"
         android:id="@+id/draw_chart"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/network_check"/>
+
 </LinearLayout>

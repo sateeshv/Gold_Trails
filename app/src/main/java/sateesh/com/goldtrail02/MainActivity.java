@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 
 import sateesh.com.goldtrail02.Data.DatabaseContract;
+import sateesh.com.goldtrail02.Network.InternetCheck;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -24,6 +26,16 @@ public class MainActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        InternetCheck networkCheck = new InternetCheck(getApplicationContext());
+        boolean connectingToInternet = networkCheck.isConnectingToInternet();
+
+        TextView internetCheck_tv = (TextView) findViewById(R.id.network_check);
+        if(connectingToInternet == true){
+            internetCheck_tv.setText("Connected");
+        }else{
+            internetCheck_tv.setText("Not Connected");
+        }
 
 
         Button insert_records_btn = (Button) findViewById(R.id.insert_records);
