@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -23,26 +22,12 @@ import sateesh.com.goldtrail02.Network.ExitWithInternet;
 import sateesh.com.goldtrail02.Network.InternetCheck;
 import sateesh.com.goldtrail02.Network.LaunchNoInternet;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        InternetCheck networkCheck = new InternetCheck(getApplicationContext());
-        boolean connectingToInternet = networkCheck.isConnectingToInternet();
-
-//        TextView internetCheck_tv = (TextView) findViewById(R.id.network_check);
-        if(connectingToInternet == true){
-            Log.v("Sateesh: ", "*** Internet is ON");
-//            internetCheck_tv.setText("Connected");
-        }else{
-            Log.v("Sateesh: ", "*** Internet is OFF");
-            LaunchNoInternet noInternet = new LaunchNoInternet();
-            noInternet.show(getFragmentManager(), "LaunchNoInternet");
-
-        }
 
 
         Button insert_records_btn = (Button) findViewById(R.id.insert_records);
@@ -80,10 +65,10 @@ public class MainActivity extends AppCompatActivity  {
             public void onClick(View v) {
                 File sd = Environment.getExternalStorageDirectory();
                 File data = Environment.getDataDirectory();
-                FileChannel source=null;
-                FileChannel destination=null;
+                FileChannel source = null;
+                FileChannel destination;
                 String SAMPLE_DB_NAME = "ClassDetails.db";
-                String currentDBPath = "/data/"+ "sateesh.com.goldtrail02" +"/databases/"+SAMPLE_DB_NAME;
+                String currentDBPath = "/data/" + "sateesh.com.goldtrail02" + "/databases/" + SAMPLE_DB_NAME;
                 String backupDBPath = SAMPLE_DB_NAME;
                 File currentDB = new File(data, currentDBPath);
                 File backupDB = new File(sd, backupDBPath);
@@ -94,7 +79,7 @@ public class MainActivity extends AppCompatActivity  {
                     source.close();
                     destination.close();
                     Toast.makeText(MainActivity.this, "DB Exported!", Toast.LENGTH_LONG).show();
-                } catch(IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -114,17 +99,28 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public void onBackPressed() {
 
-        InternetCheck networkCheck = new InternetCheck(getApplicationContext());
-        boolean connectingToInternet = networkCheck.isConnectingToInternet();
-        if(connectingToInternet == true){
-            Log.v("Sateesh: ", "*** Internet is ON");
+        if (InternetCheck.isConnectingToInternet(this) == true) {
+
             ExitWithInternet exitWithInternet = new ExitWithInternet();
             exitWithInternet.show(getFragmentManager(), "ExitWithInternet");
 
-        }else{
-            Log.v("Sateesh: ", "*** Internet is OFF");
+        } else {
+
             ExitNoInternet exitNoInternet = new ExitNoInternet();
             exitNoInternet.show(getFragmentManager(), "ExitNoInternet");
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (InternetCheck.isConnectingToInternet(this) == true) {
+        } else {
+
+            LaunchNoInternet noInternet = new LaunchNoInternet();
+            noInternet.show(getFragmentManager(), "LaunchNoInternet");
+
+        }
+    }
+
 }
