@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Gold Trail 02</string>
+    <string name="ok">OK</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
 </resources>

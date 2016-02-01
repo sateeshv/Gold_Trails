@@ -6,9 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -18,7 +18,10 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 
 import sateesh.com.goldtrail02.Data.DatabaseContract;
+import sateesh.com.goldtrail02.Network.ExitNoInternet;
+import sateesh.com.goldtrail02.Network.ExitWithInternet;
 import sateesh.com.goldtrail02.Network.InternetCheck;
+import sateesh.com.goldtrail02.Network.LaunchNoInternet;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -30,11 +33,15 @@ public class MainActivity extends AppCompatActivity  {
         InternetCheck networkCheck = new InternetCheck(getApplicationContext());
         boolean connectingToInternet = networkCheck.isConnectingToInternet();
 
-        TextView internetCheck_tv = (TextView) findViewById(R.id.network_check);
+//        TextView internetCheck_tv = (TextView) findViewById(R.id.network_check);
         if(connectingToInternet == true){
-            internetCheck_tv.setText("Connected");
+            Log.v("Sateesh: ", "*** Internet is ON");
+//            internetCheck_tv.setText("Connected");
         }else{
-            internetCheck_tv.setText("Not Connected");
+            Log.v("Sateesh: ", "*** Internet is OFF");
+            LaunchNoInternet noInternet = new LaunchNoInternet();
+            noInternet.show(getFragmentManager(), "LaunchNoInternet");
+
         }
 
 
@@ -104,4 +111,20 @@ public class MainActivity extends AppCompatActivity  {
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+        InternetCheck networkCheck = new InternetCheck(getApplicationContext());
+        boolean connectingToInternet = networkCheck.isConnectingToInternet();
+        if(connectingToInternet == true){
+            Log.v("Sateesh: ", "*** Internet is ON");
+            ExitWithInternet exitWithInternet = new ExitWithInternet();
+            exitWithInternet.show(getFragmentManager(), "ExitWithInternet");
+
+        }else{
+            Log.v("Sateesh: ", "*** Internet is OFF");
+            ExitNoInternet exitNoInternet = new ExitNoInternet();
+            exitNoInternet.show(getFragmentManager(), "ExitNoInternet");
+        }
+    }
 }
